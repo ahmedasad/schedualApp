@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:orientation="vertical"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="wrap_content"
+                                                   android:foregroundTint="#02D5D0D0" android:background="#000E0101">
+
+
+    <androidx.cardview.widget.CardView
+            app:cardCornerRadius="12dp"
+            android:layout_width="407dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/cardView2"
+            app:cardBackgroundColor="#E9F5FF"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginLeft="5dp" android:layout_marginRight="5dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <ImageView
+                    android:layout_width="98dp"
+                    android:layout_height="98dp" app:srcCompat="@drawable/dinner_status"
+                    android:id="@+id/statusImage"
+                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="4dp"
+                    android:scaleType="fitXY" android:layout_marginStart="2dp" android:layout_marginBottom="4dp"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+            <TextView
+                    android:text="Dinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/statusTitle" android:textStyle="bold"
+                    android:textColor="@android:color/black" android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/statusImage"
+                    android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="@+id/statusImage"
+                    android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.033"/>
+            <TextView
+                    android:text="With someone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/statusDetail" android:layout_marginTop="2dp"
+                    app:layout_constraintTop_toBottomOf="@+id/statusTitle"
+                    app:layout_constraintStart_toStartOf="@+id/statusTitle"
+                    android:textSize="15sp" android:textAlignment="center"/>
+            <TextView
+                    android:text="10:20 PM"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/statusTime" app:layout_constraintStart_toStartOf="@+id/statusDetail"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/statusDetail"
+                    app:layout_constraintBottom_toBottomOf="@+id/statusImage" app:layout_constraintVertical_bias="0.0"/>
+            <TextView
+                    android:text="Oct 11, 2019"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/statusDate" app:layout_constraintStart_toEndOf="@+id/statusTime"
+                    app:layout_constraintTop_toTopOf="@+id/statusTime"
+                    app:layout_constraintBottom_toBottomOf="@+id/statusTime" app:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                    app:layout_constraintHorizontal_bias="0.11"/>
+            <TextView
+                    android:text="Scheduled In:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView2" app:layout_constraintStart_toEndOf="@+id/statusDate"
+                    android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="8dp" app:layout_constraintHorizontal_bias="0.813"
+                    app:layout_constraintTop_toTopOf="@+id/statusDate"/>
+            <TextView
+                    android:text="America"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/statusLocation"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2"
+                    app:layout_constraintStart_toStartOf="@+id/textView2"
+                    app:layout_constraintEnd_toEndOf="@+id/textView2" android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent" android:textColor="#1B0E0E"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:background="@drawable/background"
+        android:weightSum="10"
+        tools:context=".Controller.MainActivity"
+        app:layout_constraintBottom_toBottomOf="parent"
+>
+    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                                android:id="@+id/guideline"
+                                                android:orientation="vertical"
+                                                app:layout_constraintGuide_percent="0.50121653"/>
+    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                                android:id="@+id/guideline3"
+                                                android:orientation="horizontal"
+                                                app:layout_constraintGuide_percent="0.21"/>
+    <TextView
+            android:text="Category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline3" android:textSize="30sp"
+            android:textColor="@android:color/white" android:textStyle="bold" android:textAlignment="center"/>
+    <androidx.cardview.widget.CardView
+            app:cardCornerRadius="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="135dp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" android:layout_marginTop="12dp"
+            app:layout_constraintTop_toTopOf="@+id/guideline3" android:id="@+id/cardView2"
+            app:cardBackgroundColor="#AB2B7EB4" android:onClick="travelClicked">
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp" app:srcCompat="@drawable/flight"
+                    android:id="@+id/imageTravel"
+                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="4dp"
+                    android:scaleType="fitXY"/>
+            <TextView
+                    android:text="Travel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textTravel" android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/imageTravel"
+                    app:layout_constraintEnd_toEndOf="@+id/imageTravel"
+                    app:layout_constraintStart_toStartOf="@+id/imageTravel"
+                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+                    android:textColor="@android:color/black"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+            app:cardCornerRadius="12dp"
+            android:layout_width="168dp"
+            android:layout_height="135dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline" android:layout_marginStart="8dp"
+            app:layout_constraintTop_toTopOf="@+id/cardView2"
+            app:cardBackgroundColor="#AB2B7EB4" app:layout_constraintBottom_toBottomOf="@+id/cardView2"
+            android:onClick="meetingClicked">
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp" app:srcCompat="@drawable/meeting"
+                    android:id="@+id/imageMeeting"
+                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="4dp"/>
+            <TextView
+                    android:text="Meeting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView3" android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/imageMeeting"
+                    app:layout_constraintEnd_toEndOf="@+id/imageMeeting"
+                    app:layout_constraintStart_toStartOf="@+id/imageMeeting"
+                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+                    android:textColor="@android:color/black"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+            app:cardCornerRadius="12dp"
+            android:layout_width="168dp"
+            android:layout_height="135dp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp" android:id="@+id/cardView3"
+            android:layout_marginTop="24dp" app:layout_constraintTop_toBottomOf="@+id/cardView2"
+            app:cardBackgroundColor="#AB2B7EB4" android:onClick="callClicked">
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp" app:srcCompat="@drawable/call"
+                    android:id="@+id/imageCall"
+                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="4dp"/>
+            <TextView
+                    android:text="Call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textCall" android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/imageCall"
+                    app:layout_constraintEnd_toEndOf="@+id/imageCall"
+                    app:layout_constraintStart_toStartOf="@+id/imageCall"
+                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+                    android:textColor="@android:color/black"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+            app:cardCornerRadius="12dp"
+            android:layout_width="168dp"
+            android:layout_height="135dp"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cardView3" app:cardBackgroundColor="#AB2B7EB4"
+            app:layout_constraintBottom_toBottomOf="@+id/cardView3" android:layout_marginStart="8dp"
+            android:onClick="taskClicked">
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp" app:srcCompat="@drawable/task"
+                    android:id="@+id/imageTask"
+                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="4dp"
+                    android:scaleType="fitXY"/>
+            <TextView
+                    android:text="Task"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textTask" android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/imageTask"
+                    app:layout_constraintEnd_toEndOf="@+id/imageTask"
+                    app:layout_constraintStart_toStartOf="@+id/imageTask"
+                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+                    android:textColor="@android:color/black"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+            app:cardCornerRadius="12dp"
+            android:layout_width="168dp"
+            android:layout_height="135dp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" android:id="@+id/cardView4"
+            app:layout_constraintTop_toBottomOf="@+id/cardView3"
+            app:cardBackgroundColor="#AB2B7EB4"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.0" android:onClick="dinnerClicked">
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp" app:srcCompat="@drawable/dinner"
+                    android:id="@+id/imageDinner"
+                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="4dp"
+                    android:scaleType="fitXY"/>
+            <TextView
+                    android:text="Dinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textDinner" android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/imageDinner"
+                    app:layout_constraintEnd_toEndOf="@+id/imageDinner"
+                    app:layout_constraintStart_toStartOf="@+id/imageDinner"
+                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+                    android:textColor="@android:color/black"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+            app:cardCornerRadius="12dp"
+            android:layout_width="168dp"
+            android:layout_height="135dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="@+id/guideline"
+            android:layout_marginStart="8dp" app:layout_constraintTop_toTopOf="@+id/cardView4"
+            app:cardBackgroundColor="#AB2B7EB4" app:layout_constraintBottom_toBottomOf="@+id/cardView4"
+            android:onClick="extraClicked">
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp" app:srcCompat="@drawable/extras"
+                    android:id="@+id/imageExtra"
+                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="4dp"/>
+            <TextView
+                    android:text="Extras"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textExtra" android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/imageExtra"
+                    app:layout_constraintEnd_toEndOf="@+id/imageExtra"
+                    app:layout_constraintStart_toStartOf="@+id/imageExtra"
+                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+                    android:textColor="@android:color/black"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
