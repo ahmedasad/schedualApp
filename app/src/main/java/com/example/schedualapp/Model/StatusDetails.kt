@@ -16,137 +16,44 @@ class StatusDetails {
     var location: String = ""
 
     constructor()
-    constructor(
-        id: Int,
-        travelTitle: String,
-        travelDate: String,
-        travelTime: String,
-        travelFrom: String,
-        travelTo: String,
-        travelExtraNote: String,
-        travelTimeBefore: String,
-        travelLocationSet: String
-    ) {
+    constructor(id: Int,Title: String,Date: String,Time: String,From: String,To: String,ExtraNote: String,TimeBefore: String,LocationSet: String) {
         this.id = id
-        this.title = travelTitle
-        this.date = travelDate
-        this.time = travelTime
-        this.from = travelFrom
-        this.to = travelTo
-        this.timeBefore = travelTimeBefore
-        this.extraNote = travelExtraNote
-        this.location = travelLocationSet
+        this.title = Title
+        this.date = Date
+        this.time = Time
+        this.from = From
+        this.to = To
+        this.timeBefore = TimeBefore
+        this.extraNote = ExtraNote
+        this.location = LocationSet
 
     }
 
-    constructor(
-        id: Int,
-        meetingTitle: String,
-        meetingDate: String,
-        meetingTime: String,
-        meetingWith: String,
-        meetingPlace: String,
-        meetingTimeBefore: String,
-        locationMeetingSet: String,
-        _1: String?,
-        _2: String?
-    ) {
+    constructor(id: Int,Title: String,Date: String,Time: String,With: String,Place: String,TimeBefore: String,locationMeetingSet: String) {
         this.id = id
-        this.title = meetingTitle
-        this.date = meetingDate
-        this.time = meetingTime
-        this.with = meetingWith
-        this.place = meetingPlace
-        this.timeBefore = meetingTimeBefore
+        this.title = Title
+        this.date = Date
+        this.time = Time
+        this.with = With
+        this.place = Place
+        this.timeBefore = TimeBefore
         this.location = locationMeetingSet
     }
 
-    constructor(
-        id: Int,
-        callTitle: String,
-        callDate: String,
-        callTime: String,
-        callTo: String,
-        callTimeBefore: String,
-        locationCallSet: String
-    ) {
+    constructor(id: Int,Title: String,Date: String,Time: String,To: String,TimeBefore: String,locationCallSet: String) {
         this.id = id
-        this.title = callTitle
-        this.date = callDate
-        this.time = callTime
-        this.to = callTo
-        this.timeBefore = callTimeBefore
+        this.title = Title
+        this.date = Date
+        this.time = Time
+        this.to = To
+        this.timeBefore = TimeBefore
         this.location = locationCallSet
     }
 
-    constructor(
-        id: Int,
-        taskTitle: String,
-        taskDate: String,
-        taskTime: String,
-        taskWork: String,
-        taskTimeBefore: String,
-        locationTaskSet: String,
-        _6: String,
-        _5: String?,
-        _3: String?,
-        _4: String?,
-        _1: String?,
-        _2: String?
-    ) {
-        this.id = id
-        this.title = taskTitle
-        this.date = taskDate
-        this.time = taskTime
-        this.timeBefore = taskTimeBefore
-        this.workTask = taskWork
-        this.location = locationTaskSet
 
-    }
 
-    constructor(
-        id: Int,
-        DinnerTitle: String,
-        DinnerDate: String,
-        DinnerTime: String,
-        DinnerWith: String,
-        DinnerPlace: String,
-        DinnerTimeBefore: String,
-        locationDinnerSet: String
-    ) {
-        this.id = id
-        this.title = DinnerTitle
-        this.date = DinnerDate
-        this.time = DinnerTime
-        this.with = DinnerWith
-        this.place = DinnerPlace
-        this.timeBefore = DinnerTimeBefore
-        this.location = locationDinnerSet
-    }
 
-    constructor(
-        id: Int, extraTitle: String,
-        extraDate: String,
-        extraTime: String,
-        extraWork: String,
-        extraTimeBefore: String,
-        locationExtraSet: String,
-        _5: String?,
-        _6: String,
-        _7: String,
-        _4: String?,
-        _3: String?,
-        _1: String?,
-        _2: String?
-    ) {
-        this.id = id
-        this.title = extraTitle
-        this.date = extraDate
-        this.time = extraTime
-        this.workExtra = extraWork
-        this.timeBefore = extraTimeBefore
 
-        this.location = locationExtraSet
-    }
+
 
 }

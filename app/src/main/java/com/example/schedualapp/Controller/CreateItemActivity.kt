@@ -1,17 +1,24 @@
 package com.example.schedualapp.Controller
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import com.example.schedualapp.Model.DataHelper
 import com.example.schedualapp.Model.StatusDetails
 import com.example.schedualapp.R
+import com.example.schedualapp.Utility.AppData
 import com.example.schedualapp.Utility.SCHEDULE_NAME
+import com.google.android.gms.location.LocationServices
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -21,12 +28,11 @@ class CreateItemActivity : AppCompatActivity() {
     var scheduleName = ""
     var date = ""
     lateinit var db: DataHelper
-
+    lateinit var preference: AppData
+    var count: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        db = DataHelper(this)
         scheduleName = intent.getStringExtra(SCHEDULE_NAME)
-
         when (scheduleName) {
             "travel" -> setContentView(R.layout.shedule_travel)
             "meeting" -> setContentView(R.layout.shedule_meeting)
@@ -36,10 +42,13 @@ class CreateItemActivity : AppCompatActivity() {
             "extra" -> setContentView(R.layout.shedule_extra)
         }
 
+        preference = AppData(this)
+        count = preference.getCount()
+
+        db = DataHelper(this)
+
         preSetDateAndTime(scheduleName)
-
     }
-
 
     fun btnCloseClicked(view: View) {
         val intent = Intent(this, MainActivity::class.java)
@@ -55,27 +64,16 @@ class CreateItemActivity : AppCompatActivity() {
         val time = findViewById<TextView>(R.id.txtTimeSetTravel).text.toString()
         val date = findViewById<TextView>(R.id.txtDateSetTravel).text.toString()
         val timeBefore = findViewById<TextView>(R.id.txtMinBeforeTravel).text.toString()
-        val loc = "Pakistan"
-        val statusDetail = StatusDetails(1, scheduleName, date, time, from, to, extraNote, timeBefore, loc)
-        db.addActivity(statusDetail)
-        Toast.makeText(this, "created field successfully", Toast.LENGTH_LONG).show()
-        val intent = Intent(this, MainActivity::class.java)
-        finish()
-        startActivity(intent)
+        getLocationAndSaveFirstCategoryData(time, date, from, to, extraNote, timeBefore)
     }
 
     fun btnMeetingSaveClicked(view: View) {
         val with = findViewById<TextView>(R.id.txtWithMeeting).text.toString()
-        val Place = findViewById<TextView>(R.id.txtInMeeting).text.toString()
+        val place = findViewById<TextView>(R.id.txtInMeeting).text.toString()
         val time = findViewById<TextView>(R.id.txtTimeSetMeeting).text.toString()
         val date = findViewById<TextView>(R.id.txtDateSetMeeting).text.toString()
         val timeBefore = findViewById<TextView>(R.id.txtMinBeforeMeeting).text.toString()
-        val loc = "Pakistan"
-        val statusDetail = StatusDetails(2, scheduleName, date, time, with, Place, timeBefore, loc)
-        db.addActivity(statusDetail)
-        val intent = Intent(this, MainActivity::class.java)
-        finish()
-        startActivity(intent)
+        getLocationAndSaveThirdCategoryData(time, date, with, place, timeBefore)
 
     }
 
@@ -84,12 +82,7 @@ class CreateItemActivity : AppCompatActivity() {
         val time = findViewById<TextView>(R.id.txtTimeSetCall).text.toString()
         val date = findViewById<TextView>(R.id.txtDateSetCall).text.toString()
         val timeBefore = findViewById<TextView>(R.id.txtMinBeforeCall).text.toString()
-        val loc = "Pakistan"
-        val statusDetail = StatusDetails(3, scheduleName, date, time, to, timeBefore, loc)
-        db.addActivity(statusDetail)
-        val intent = Intent(this, MainActivity::class.java)
-        finish()
-        startActivity(intent)
+        getLocationAndSaveSecondCategoryData(time, date, to, timeBefore)
     }
 
     fun btnTaskSaveClicked(view: View) {
@@ -97,13 +90,7 @@ class CreateItemActivity : AppCompatActivity() {
         val time = findViewById<TextView>(R.id.txtTimeSetTask).text.toString()
         val date = findViewById<TextView>(R.id.txtDateSetTask).text.toString()
         val timeBefore = findViewById<TextView>(R.id.txtMinBeforeTask).text.toString()
-        val loc = "Pakistan"
-        val statusDetail = StatusDetails(4, scheduleName, date, time, work, timeBefore, loc)
-        db.addActivity(statusDetail)
-
-        val intent = Intent(this, MainActivity::class.java)
-        finish()
-        startActivity(intent)
+        getLocationAndSaveSecondCategoryData(time, date, work, timeBefore)
     }
 
     fun btnDinnerSaveClicked(view: View) {
@@ -112,12 +99,7 @@ class CreateItemActivity : AppCompatActivity() {
         val time = findViewById<TextView>(R.id.txtTimeSetDinner).text.toString()
         val date = findViewById<TextView>(R.id.txtDateSetDinner).text.toString()
         val timeBefore = findViewById<TextView>(R.id.txtMinBeforeDinner).text.toString()
-        val loc = "Pakistan"
-        val statusDetail = StatusDetails(5, scheduleName,date, time, with, place, timeBefore, loc)
-        db.addActivity(statusDetail)
-        val intent = Intent(this, MainActivity::class.java)
-        finish()
-        startActivity(intent)
+        getLocationAndSaveThirdCategoryData(time, date, with, place, timeBefore)
     }
 
     fun btnExtraSaveClicked(view: View) {
@@ -125,13 +107,102 @@ class CreateItemActivity : AppCompatActivity() {
         val date = findViewById<TextView>(R.id.txtDateSetExtra).text.toString()
         val work = findViewById<TextView>(R.id.txtWorkExtra).text.toString()
         val timeBefore = findViewById<TextView>(R.id.txtMinBeforeExtra).text.toString()
-        val loc = "Pakistan"
-        val statusDetail = StatusDetails(6, scheduleName,date,time,work,timeBefore,loc)
-        db.addActivity(statusDetail)
-        val intent = Intent(this, MainActivity::class.java)
-        finish()
-        startActivity(intent)
+        getLocationAndSaveSecondCategoryData(time, date, work, timeBefore)
     }
+
+    fun getLocationAndSaveFirstCategoryData(time: String,date: String,from: String,to: String,extraNote: String,timeBefore: String) {
+        count++
+        preference.setCount(count)
+
+
+        requestPermission(this)
+        val client = LocationServices.getFusedLocationProviderClient(this)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) return
+
+        println("client___ $client")
+        client.lastLocation.addOnSuccessListener { p0 ->
+            if (p0 != null) {
+                val location = getLocationName(p0.longitude, p0.latitude)
+                val statusDetail = StatusDetails(count, scheduleName, date, time, from, to, extraNote, timeBefore, location)
+                db.addActivity(statusDetail)
+                val intent = Intent(this, MainActivity::class.java)
+                finish()
+                startActivity(intent)
+            } else {
+                println("location___" + p0.toString())
+            }
+        }
+
+        println("Count..... $")
+
+    }
+
+    fun getLocationAndSaveSecondCategoryData(time: String, date: String, work: String, timeBefore: String) {
+
+        count++
+        preference.setCount(count)
+
+        requestPermission(this)
+        val client = LocationServices.getFusedLocationProviderClient(this)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) return
+
+        println("client___ $client")
+        client.lastLocation.addOnSuccessListener { p0 ->
+            if (p0 != null) {
+                val location = getLocationName(p0.longitude, p0.latitude)
+                val statusDetail = StatusDetails(count, scheduleName, date, time, work, timeBefore, location)
+                db.addActivity(statusDetail)
+                val intent = Intent(this, MainActivity::class.java)
+                finish()
+                startActivity(intent)
+            } else {
+                println("location___" + p0.toString())
+            }
+        }
+        println("Count..... $0")
+
+
+    }
+
+    fun getLocationAndSaveThirdCategoryData(time: String,date: String,with: String,place: String,timeBefore: String) {
+
+        count++
+        preference.setCount(count)
+
+        requestPermission(this)
+        val client = LocationServices.getFusedLocationProviderClient(this)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) return
+
+        println("client___ $client")
+        client.lastLocation.addOnSuccessListener { p0 ->
+            if (p0 != null) {
+                val location = getLocationName(p0.longitude, p0.latitude)
+                val statusDetail = StatusDetails(count, scheduleName, date, time, with, place, timeBefore, location)
+                db.addActivity(statusDetail)
+                val intent = Intent(this, MainActivity::class.java)
+                finish()
+                startActivity(intent)
+            } else {
+                println("location___" + p0.toString())
+            }
+        }
+        println("Count..... ")
+
+
+    }
+
 
     private fun preSetDateAndTime(layoutName: String) {
         val sdfTime = SimpleDateFormat("h:mm a")
@@ -251,4 +322,23 @@ class CreateItemActivity : AppCompatActivity() {
         }, currentHour, currentMinute, false)
         timePick.show()
     }
+
+    private fun requestPermission(context: Activity) {
+        ActivityCompat.requestPermissions(context, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 1)
+    }
+
+    fun getLocationName(lon: Double, lat: Double): String {
+        try {
+            val geocoder = Geocoder(this)
+            var address: List<Address>
+            address = geocoder.getFromLocation(lat, lon, 1)
+
+            val country = address.get(0).countryName
+            return address.get(0).locality
+        } catch (e: IOException) {
+
+        }
+        return ""
+    }
+
 }

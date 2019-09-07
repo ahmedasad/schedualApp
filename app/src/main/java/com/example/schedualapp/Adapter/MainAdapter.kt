@@ -1,15 +1,15 @@
 package com.example.schedualapp.Adapter
 
 import android.content.Context
+import android.net.sip.SipSession
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.example.schedualapp.Model.StatusDetails
 import com.example.schedualapp.R
+import com.google.android.gms.cast.Cast
 
 class MainAdapter(val context: Context, val status: List<StatusDetails>) : RecyclerView.Adapter<MainAdapter.Holder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -24,18 +24,22 @@ class MainAdapter(val context: Context, val status: List<StatusDetails>) : Recyc
 
     override fun onBindViewHolder(Holder: Holder, position: Int) {
         Holder.bindStatus(context, status[position])
-    }
 
+    }
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title = itemView?.findViewById<TextView>(R.id.statusTitle)
         val time = itemView?.findViewById<TextView>(R.id.statusTime)
         val date = itemView?.findViewById<TextView>(R.id.statusDate)
         val detail = itemView?.findViewById<TextView>(R.id.statusDetail)
-        val loc= itemView?.findViewById<TextView>(R.id.statusLocation)
+        val loc = itemView?.findViewById<TextView>(R.id.statusLocation)
         val img = itemView?.findViewById<ImageView>(R.id.statusImage)
+        val delBtn = itemView.findViewById<ImageButton>(R.id.statusDeleteBtn)
+
+
 
         fun bindStatus(context: Context, status: StatusDetails) {
+
             val resId = context.resources.getIdentifier("${status.title}_status", "drawable", context.packageName)
 
             img.setImageResource(resId)
@@ -45,21 +49,18 @@ class MainAdapter(val context: Context, val status: List<StatusDetails>) : Recyc
             loc.text = status.location
             if (status.title == "travel") {
                 detail.text = "${status.from} to ${status.to}"
-            } else if(status.title == "task"){
-                detail.text = "${status.workTask}"
-            }
-            else if(status.title == "call"){
+            } else if (status.title == "task") {
+                detail.text = "${status.to}"
+            } else if (status.title == "call") {
+                detail.text = "${status.to}"
+            } else if (status.title == "meeting") {
+                detail.text = "${status.with} in ${status.place}"
+            } else if (status.title == "dinner") {
+                detail.text = "${status.with} in ${status.place}"
+            } else {
                 detail.text = "${status.to}"
             }
-            else if(status.title == "meeting"){
-                detail.text = "${status.with} in ${status.place}"
-            }
-            else if(status.title == "dinner"){
-                detail.text = "${status.with} in ${status.place}"
-            }
-            else{
-                detail.text = "${status.workExtra}"
-            }
+
         }
     }
 }
