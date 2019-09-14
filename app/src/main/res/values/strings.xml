@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Schedual App</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="titleDialogView">Title</string>
+    <string name="detailDialogView">Detail</string>
+    <string name="extraNoteDialogView">Title</string>
+    <string name="DateAndTimeDialogView">10:10 PM 11 Sep, 2012</string>
 </resources>

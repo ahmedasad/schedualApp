@@ -3,6 +3,7 @@
           package="com.example.schedualapp">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
             android:allowBackup="true"
@@ -11,12 +12,13 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".Controller.CreateItemActivity"
-        android:parentActivityName=".Controller.MainActivity">
+        <activity android:name=".Controller.ShowDataFromNotification">
         </activity>
         <activity
-                android:name=".Controller.MainActivity"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:name=".Controller.CreateItemActivity"
+                android:parentActivityName=".Controller.MainActivity">
+        </activity>
+        <activity android:name=".Controller.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -25,6 +27,10 @@
         </activity>
         <activity android:name=".Controller.MenuActivity">
         </activity>
+
+        <service
+                android:name=".BackgroundServices.JobServices"
+                android:permission="android.permission.BIND_JOB_SERVICE"/>
 
         <meta-data
                 android:name="preloaded_fonts"

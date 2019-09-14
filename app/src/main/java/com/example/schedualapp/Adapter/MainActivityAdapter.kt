@@ -1,15 +1,12 @@
 package com.example.schedualapp.Adapter
 
 import android.content.Context
-import android.content.Intent
 import android.view.View
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
-import com.example.schedualapp.Controller.MainActivity
-import com.example.schedualapp.Model.DataHelper
+import android.widget.*
+import com.example.schedualapp.Utility.DataHelper
 import com.example.schedualapp.R
 import com.example.schedualapp.Model.StatusDetails
+import com.example.schedualapp.Utility.GeneralMethods
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 
@@ -31,7 +28,7 @@ class MainActivityAdapter(val context: Context, val status: StatusDetails) : Ite
         val resId = context.resources.getIdentifier("${status.title}_status", "drawable", context.packageName)
 
         img.setImageResource(resId)
-        title.text = status.title
+        title.text = status.title.substring(0,1).toUpperCase() + status.title.substring(1)
         time.text = status.time
         date.text = status.date
         loc.text = status.location
@@ -52,16 +49,32 @@ class MainActivityAdapter(val context: Context, val status: StatusDetails) : Ite
 
         delBtn.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
-                deleteRow()
-                DataHelper(context).deleteActivity(status)
+
+                GeneralMethods(context).btnCloseClick(status)
             }
 
         })
 
+        viewHolder.itemView.setOnLongClickListener {
+            Toast.makeText(context, "Long Clicked from main", Toast.LENGTH_LONG).show()
+            val item = DataHelper(context).allActivityList.indexOf(status)
+            val id = status.id
+            println("item  ..."+item)
+//            val data = DataHelper(context).allActivityList[item]
+//            createGroupOnClick(data)
+
+            true
+
+
+        }
+
+//        viewHolder.itemView.setOnLongClickListener {
+//            Toast.makeText(context,"Long Clicked", Toast.LENGTH_LONG).show()
+//            true
+//        }
+
 
     }
 
-    fun deleteRow() {
-        notifyChanged()
-    }
+
 }

@@ -5,7 +5,7 @@
         android:layout_width="match_parent" android:layout_height="match_parent"
         android:background="@drawable/background"
         android:weightSum="10"
-        tools:context=".Controller.MainActivity"
+        tools:context=".Controller.MenuActivity"
         app:layout_constraintBottom_toBottomOf="parent"
 >
     <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
             android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp" android:layout_marginTop="12dp"
             app:layout_constraintTop_toTopOf="@+id/guideline3" android:id="@+id/cardView2"
-            app:cardBackgroundColor="#AB2B7EB4" android:onClick="travelClicked">
+            app:cardBackgroundColor="#E0DDD0" android:onClick="travelClicked">
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
@@ -66,7 +66,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline" android:layout_marginStart="8dp"
             app:layout_constraintTop_toTopOf="@+id/cardView2"
-            app:cardBackgroundColor="#AB2B7EB4" app:layout_constraintBottom_toBottomOf="@+id/cardView2"
+            app:cardBackgroundColor="#E0DDD0" app:layout_constraintBottom_toBottomOf="@+id/cardView2"
             android:onClick="meetingClicked">
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
@@ -98,7 +98,7 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp" android:id="@+id/cardView3"
             android:layout_marginTop="24dp" app:layout_constraintTop_toBottomOf="@+id/cardView2"
-            app:cardBackgroundColor="#AB2B7EB4" android:onClick="callClicked">
+            app:cardBackgroundColor="#E0DDD0" android:onClick="callClicked">
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
@@ -128,7 +128,7 @@
             android:layout_height="135dp"
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/cardView3" app:cardBackgroundColor="#AB2B7EB4"
+            app:layout_constraintTop_toTopOf="@+id/cardView3" app:cardBackgroundColor="#E0DDD0"
             app:layout_constraintBottom_toBottomOf="@+id/cardView3" android:layout_marginStart="8dp"
             android:onClick="taskClicked">
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -163,7 +163,7 @@
             android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp" android:id="@+id/cardView4"
             app:layout_constraintTop_toBottomOf="@+id/cardView3"
-            app:cardBackgroundColor="#AB2B7EB4"
+            app:cardBackgroundColor="#E0DDD0"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0.0" android:onClick="dinnerClicked">
@@ -198,7 +198,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="@+id/guideline"
             android:layout_marginStart="8dp" app:layout_constraintTop_toTopOf="@+id/cardView4"
-            app:cardBackgroundColor="#AB2B7EB4" app:layout_constraintBottom_toBottomOf="@+id/cardView4"
+            app:cardBackgroundColor="#E0DDD0" app:layout_constraintBottom_toBottomOf="@+id/cardView4"
             android:onClick="extraClicked">
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
@@ -223,5 +223,6 @@
                     android:textColor="@android:color/black"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
