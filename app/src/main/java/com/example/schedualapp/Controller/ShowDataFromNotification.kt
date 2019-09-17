@@ -1,28 +1,40 @@
 package com.example.schedualapp.Controller
 
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.schedualapp.Model.StatusDetails
 import com.example.schedualapp.R
 import com.example.schedualapp.Utility.ACTIVITY_ID
 import com.example.schedualapp.Utility.GeneralMethods
+import java.security.Permission
+import java.util.jar.Manifest
+
 class ShowDataFromNotification : AppCompatActivity() {
 
-
+val REQUEST_CALL = 1
     lateinit var item: StatusDetails
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val data = intent.getStringExtra(ACTIVITY_ID)
         val id = data.toInt()
         item = GeneralMethods(this).getItem(id)
-        fillView(id)
+        fillView()
 
 
     }
 
-    fun fillView(id: Int) {
+
+
+    fun fillView() {
 
         when (item.title) {
             "travel" -> {
@@ -89,5 +101,35 @@ class ShowDataFromNotification : AppCompatActivity() {
 
     fun btnCloseClicked(view: View) {
         GeneralMethods(this).btnCloseClick(item)
+    }
+
+    fun btnCallClicked(view:View){
+        makePhoneCall()
+    }
+
+    private fun makePhoneCall(){
+        val num = item.contNum
+        if(num.trim().length>0){
+            if(ContextCompat.checkSelfPermission(this,android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(this,arrayOf(android.Manifest.permission.CALL_PHONE),REQUEST_CALL)
+            }
+            else{
+                val dial = "tel:$num"
+                finish()
+                startActivity(Intent(Intent.ACTION_CALL,Uri.parse(dial)))
+            }
+        }
+
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if(requestCode == REQUEST_CALL){
+            if(grantResults.size>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                makePhoneCall()
+            }
+            else{
+                Toast.makeText(this,"Permission Denied",Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

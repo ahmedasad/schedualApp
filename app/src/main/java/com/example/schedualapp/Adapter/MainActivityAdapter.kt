@@ -1,6 +1,7 @@
 package com.example.schedualapp.Adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.View
 import android.widget.*
 import com.example.schedualapp.Utility.DataHelper
@@ -51,6 +52,7 @@ class MainActivityAdapter(val context: Context, val status: StatusDetails) : Ite
             override fun onClick(p0: View?) {
 
                 GeneralMethods(context).btnCloseClick(status)
+
             }
 
         })

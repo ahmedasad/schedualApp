@@ -28,6 +28,7 @@ class DataHelper(context: Context) : SQLiteOpenHelper(context,
         private const val COL_EXTRANOTE = "_ExtraNote"
         private const val COL_TIME = "_Time"
         private const val COL_DATE = "_Date"
+        private const val COL_CONT_NUM = "_ContNum"
         private const val COL_LOCATION = "_Location"
 
 
@@ -37,7 +38,7 @@ class DataHelper(context: Context) : SQLiteOpenHelper(context,
 
         val CREATE_TABLE_QUERY = ("CREATE TABLE $TABLE_NAME ( $COL_ID INTEGER PRIMARY KEY, " +
                 "$COL_TITLE TEXT, $COL_DATE TEXT,$COL_TIME TEXT,$COL_FROM TEXT,$COL_TO TEXT,$COL_WITH " +
-                "TEXT,$COL_PLACE TEXT,$COL_EXTRANOTE TEXT, $COL_LOCATION TEXT)")
+                "TEXT,$COL_PLACE TEXT,$COL_EXTRANOTE TEXT, $COL_LOCATION TEXT, $COL_CONT_NUM TEXT)")
         db?.execSQL(CREATE_TABLE_QUERY)
     }
 
@@ -67,6 +68,7 @@ class DataHelper(context: Context) : SQLiteOpenHelper(context,
                     activity.place = cursor.getString(cursor.getColumnIndex(COL_PLACE))
                     activity.extraNote = cursor.getString(cursor.getColumnIndex(COL_EXTRANOTE))
                     activity.location = cursor.getString(cursor.getColumnIndex(COL_LOCATION))
+                    activity.contNum = cursor.getString(cursor.getColumnIndex(COL_CONT_NUM))
 
                     listActivity.add(activity)
                 } while (cursor.moveToNext())
@@ -89,6 +91,7 @@ class DataHelper(context: Context) : SQLiteOpenHelper(context,
         values.put(COL_TIME, activity.time)
         values.put(COL_DATE, activity.date)
         values.put(COL_LOCATION, activity.location)
+        values.put(COL_CONT_NUM,activity.contNum)
         println(activity.location)
         db.insert(TABLE_NAME, null, values)
         db.close()

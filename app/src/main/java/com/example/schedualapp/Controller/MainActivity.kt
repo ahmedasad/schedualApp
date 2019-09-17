@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -24,32 +23,23 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
     lateinit var adapter: GroupAdapter<ViewHolder>
     var db = DataHelper(this)
-    lateinit var dateandTime: String
     lateinit var sizeOfDataBase: List<StatusDetails>
-
-    companion object {
-        var Count = 0
-        fun CountSeconds() {
-            Count++
-        }
-    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        GeneralMethods(this).requestContactPermission(this)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.READ_CONTACTS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) return
 
         db = DataHelper(this)
         adapter = GroupAdapter()
         refreshList()
-
-//        if(intent.hasExtra(ACTIVITY_ID)){
-//            if(intent.getStringExtra(ACTIVITY_ID)!="asd"){
-//            var ActivityId:String = intent.getStringExtra(ACTIVITY_ID)
-//            val id = ActivityId!!.toInt()-48}
-
-//        }
 
         sizeOfDataBase = db.allActivityList
         val layoutManager = LinearLayoutManager(this)
@@ -57,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
 
         startService(Intent(this, JobServices::class.java))
-        fab.setOnClickListener { view ->
+        callBtn.setOnClickListener { view ->
 
             val intent = Intent(this, MenuActivity::class.java)
             startActivity(intent)
@@ -67,31 +57,43 @@ class MainActivity : AppCompatActivity() {
         adapter.setOnItemClickListener { item, view ->
             Toast.makeText(this, "cliecked just", Toast.LENGTH_LONG).show()
         }
-        GeneralMethods(this).requestPermission(this)
+        GeneralMethods(this).requestLocationPermission(this)
         if (ActivityCompat.checkSelfPermission(
                 this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) return
-//        InfoBuilder(sizeOfDataBase[sizeOfDataBase.size - 1].id)
+
+        GeneralMethods(this).requestLocationPermission(this)
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        )   {
+            Toast.makeText(this, "Need to grant permission!", Toast.LENGTH_LONG).show()
+            return
+        }
 
 
-        updateList()
+        Handler(Looper.getMainLooper()).post(object : Runnable {
+            override fun run() {
+                updateList()
+                Handler().postDelayed(this, 500)
+            }
+        })
+
 
     }
     fun updateList() {
-        Handler(Looper.getMainLooper()).post(object : Runnable {
-            override fun run() {
                 if (sizeOfDataBase.size != db.allActivityList.size) refreshList()
                 else println("done..........")
-                Handler().postDelayed(this, 1000)
-            }
-        })
+
     }
 
-    fun btnClicked(view: View) {
-        db.deleteDB(this)
-    }
+//    fun btnClicked(view: View) {
+//        db.deleteDB(this)
+//    }
 
     fun refreshList() {
         adapter.clear()

@@ -1,4 +1,4 @@
 package com.example.schedualapp.Model
 
-class Contact {
+class Contact(val name:String,val num:String) {
 }

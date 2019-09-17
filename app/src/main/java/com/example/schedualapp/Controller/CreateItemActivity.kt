@@ -5,10 +5,16 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.schedualapp.Adapter.ContactAdapter
+import com.example.schedualapp.Model.Contact
 import com.example.schedualapp.Utility.DataHelper
 import com.example.schedualapp.Model.StatusDetails
 import com.example.schedualapp.R
@@ -16,6 +22,12 @@ import com.example.schedualapp.Utility.AppData
 import com.example.schedualapp.Utility.GeneralMethods
 import com.example.schedualapp.Utility.SCHEDULE_NAME
 import com.google.android.gms.location.LocationServices
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.OnItemClickListener
+import com.xwray.groupie.ViewHolder
+import kotlinx.android.synthetic.main.shedule_call.*
+import org.w3c.dom.Text
+import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -26,7 +38,10 @@ class CreateItemActivity : AppCompatActivity() {
     lateinit var db: DataHelper
     lateinit var preference: AppData
     var count: Int = 0
+    lateinit var contacts:StringBuilder
+    val adapter =GroupAdapter<ViewHolder>()
     override fun onCreate(savedInstanceState: Bundle?) {
+        val context = this
         super.onCreate(savedInstanceState)
         scheduleName = intent.getStringExtra(SCHEDULE_NAME)
         fillView(scheduleName)
@@ -37,19 +52,56 @@ class CreateItemActivity : AppCompatActivity() {
         db = DataHelper(this)
 
         preSetDateAndTime(scheduleName)
+
+        adapter.setOnItemClickListener{ item, view ->
+            val Item = item as ContactAdapter
+            val cont = Item.contact
+            findViewById<EditText>(R.id.txtToCall).setText(cont?.name+" "+ cont?.num)
+            recView.visibility = View.GONE
+        }
+        if(scheduleName=="call") {
+            txtToCall.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(p0: Editable?) {
+                    if (p0!!.length > 0) {
+                        GeneralMethods(context).filter(p0.toString(), adapter, contentResolver)
+
+//                    txtToCall.text = contact
+                    } else {
+//                    txtToCall.hint = ""
+                        adapter.clear()
+                    }
+                }
+
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    if (p0!!.length > 0) recView.visibility = View.VISIBLE
+                    else recView.visibility = View.GONE
+
+                }
+            })
+        }
     }
 
     fun fillView(scheduleName:String){
     when (scheduleName) {
         "travel" -> setContentView(R.layout.shedule_travel)
         "meeting" -> setContentView(R.layout.shedule_meeting)
-        "call" -> setContentView(R.layout.shedule_call)
+        "call" -> {
+            setContentView(R.layout.shedule_call)
+
+            recView.adapter = adapter
+            recView.layoutManager = LinearLayoutManager(this)
+        }
         "task" -> setContentView(R.layout.shedule_task)
         "dinner" -> setContentView(R.layout.shedule_dinner)
         "extra" -> setContentView(R.layout.shedule_extra)
     }
-
 }
+
+
+
     fun btnCloseClicked(view: View) {
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -80,7 +132,7 @@ class CreateItemActivity : AppCompatActivity() {
         val to = findViewById<TextView>(R.id.txtToCall).text.toString()
         val time = findViewById<TextView>(R.id.txtTimeSetCall).text.toString()
         val date = findViewById<TextView>(R.id.txtDateSetCall).text.toString()
-        getLocationAndSaveSecondCategoryData(time, date, to)
+        getLocationAndSaveFourthCategoryData(time, date, to)
     }
 
     fun btnTaskSaveClicked(view: View) {
@@ -110,7 +162,6 @@ class CreateItemActivity : AppCompatActivity() {
         preference.setCount(count)
 
 
-        GeneralMethods(this).requestPermission(this)
         val client = LocationServices.getFusedLocationProviderClient(this)
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -118,6 +169,8 @@ class CreateItemActivity : AppCompatActivity() {
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             Toast.makeText(this, "Need to grant permission!", Toast.LENGTH_LONG).show()
+            GeneralMethods(this).requestLocationPermission(this)
+
             return
         }
 
@@ -146,7 +199,6 @@ class CreateItemActivity : AppCompatActivity() {
         count++
         preference.setCount(count)
 
-        GeneralMethods(this).requestPermission(this)
         val client = LocationServices.getFusedLocationProviderClient(this)
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -154,7 +206,9 @@ class CreateItemActivity : AppCompatActivity() {
             ) != PackageManager.PERMISSION_GRANTED
         )   {
                 Toast.makeText(this, "Need to grant permission!", Toast.LENGTH_LONG).show()
-                return
+            GeneralMethods(this).requestLocationPermission(this)
+
+            return
             }
 
             println("client___ $client")
@@ -180,7 +234,7 @@ class CreateItemActivity : AppCompatActivity() {
         count++
         preference.setCount(count)
 
-        GeneralMethods(this).requestPermission(this)
+
         val client = LocationServices.getFusedLocationProviderClient(this)
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -188,14 +242,14 @@ class CreateItemActivity : AppCompatActivity() {
             ) != PackageManager.PERMISSION_GRANTED
         )   {
                 Toast.makeText(this, "Need to grant permission!", Toast.LENGTH_LONG).show()
+                GeneralMethods(this).requestLocationPermission(this)
                 return
             }
 
-            println("client___ $client")
         client.lastLocation.addOnSuccessListener { p0 ->
             if (p0 != null) {
                 val location = GeneralMethods(this).getLocationName(p0.longitude, p0.latitude)
-                val statusDetail = StatusDetails(count, scheduleName, date, time, with, place, location)
+                val statusDetail = StatusDetails(count, scheduleName, date, time, with, place, location,"","")
                 db.addActivity(statusDetail)
                 val intent = Intent(this, MainActivity::class.java)
                 finish()
@@ -206,6 +260,38 @@ class CreateItemActivity : AppCompatActivity() {
         }
         println("Count..... ")
 
+
+    }
+
+    fun getLocationAndSaveFourthCategoryData(time: String, date: String, contact: String) {
+
+        count++
+        preference.setCount(count)
+
+        val cont = contact.split(" ")
+
+        val client = LocationServices.getFusedLocationProviderClient(this)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        )   {
+            Toast.makeText(this, "Need to grant permission!", Toast.LENGTH_LONG).show()
+            GeneralMethods(this).requestLocationPermission(this)
+            return
+        }
+
+        client.lastLocation.addOnSuccessListener { p0 ->
+            if (p0 != null) {
+                val location = GeneralMethods(this).getLocationName(p0.longitude, p0.latitude)
+                val statusDetail = StatusDetails(count, scheduleName, date, time, cont[0], location,cont[1])
+                db.addActivity(statusDetail)
+                val intent = Intent(this, MainActivity::class.java)
+                finish()
+                startActivity(intent)
+            } else {
+            }
+        }
 
     }
 
@@ -316,7 +402,7 @@ class CreateItemActivity : AppCompatActivity() {
                     findViewById<TextView>(R.id.txtTimeSetCall).text = time
                 }
                 "task" -> {
-                    findViewById<TextView>(R.id.txtTimeSetTask).text = "12:14 AM"
+                    findViewById<TextView>(R.id.txtTimeSetTask).text = time
                 }
                 "dinner" -> {
                     findViewById<TextView>(R.id.txtTimeSetDinner).text = time

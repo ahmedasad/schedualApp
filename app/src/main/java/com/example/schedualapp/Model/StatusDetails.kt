@@ -11,6 +11,7 @@ class StatusDetails {
     var place: String = ""
     var extraNote: String = ""
     var location: String = ""
+    var contNum:String = ""
 
     constructor()
     constructor(id: Int,Title: String,Date: String,Time: String,From: String,To: String,ExtraNote: String,LocationSet: String) {
@@ -25,7 +26,7 @@ class StatusDetails {
 
     }
 
-    constructor(id: Int,Title: String,Date: String,Time: String,With: String,Place: String,locationMeetingSet: String) {
+    constructor(id: Int,Title: String,Date: String,Time: String,With: String,Place: String,locationMeetingSet: String,_1:String?,_2:String?) {
         this.id = id
         this.title = Title
         this.date = Date
@@ -34,7 +35,6 @@ class StatusDetails {
         this.place = Place
         this.location = locationMeetingSet
     }
-
     constructor(id: Int,Title: String,Date: String,Time: String,To: String,locationCallSet: String) {
         this.id = id
         this.title = Title
@@ -42,6 +42,17 @@ class StatusDetails {
         this.time = Time
         this.to = To
         this.location = locationCallSet
+
+    }
+
+    constructor(id: Int,Title: String,Date: String,Time: String,To: String,locationCallSet: String,contNum:String) {
+        this.id = id
+        this.title = Title
+        this.date = Date
+        this.time = Time
+        this.to = To
+        this.location = locationCallSet
+        this.contNum = contNum
     }
 
 

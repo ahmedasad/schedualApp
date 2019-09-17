@@ -139,11 +139,12 @@ class JobServices : Service() {
     val builder = NotificationCompat.Builder(this,CHANNEL_ID)
         .setContentTitle("Schedule App")
         .setSmallIcon(com.example.schedualapp.R.mipmap.ic_launcher)
-        .setContentText("${item.title} need to do write now!")
+        .setContentText("${item.id} need to do write now!")
     val ringtone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
     builder.setSound(ringtone)
 
     val resultIntent = Intent(this, ShowDataFromNotification::class.java)
+        resultIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         resultIntent.putExtra(ACTIVITY_ID,item.id.toString())
         val stackBuilder = TaskStackBuilder.create(this)
         stackBuilder.addParentStack(MainActivity::class.java)
