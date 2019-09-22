@@ -1,11 +1,7 @@
 package com.example.schedualapp.Adapter
 
 import android.content.Context
-import android.content.Intent
-import android.view.View
 import android.widget.*
-import androidx.recyclerview.widget.RecyclerView
-import com.example.schedualapp.Controller.MainActivity
 import com.example.schedualapp.Utility.DataHelper
 import com.example.schedualapp.R
 import com.example.schedualapp.Model.StatusDetails

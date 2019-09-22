@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.schedualapp.Adapter.ContactAdapter
-import com.example.schedualapp.Model.Contact
 import com.example.schedualapp.Utility.DataHelper
 import com.example.schedualapp.Model.StatusDetails
 import com.example.schedualapp.R
@@ -24,10 +23,8 @@ import com.example.schedualapp.Utility.SCHEDULE_NAME
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.OnItemClickListener
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.shedule_call.*
-import org.w3c.dom.Text
 import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*

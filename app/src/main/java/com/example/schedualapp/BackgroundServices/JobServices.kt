@@ -2,7 +2,6 @@ package com.example.schedualapp.BackgroundServices
 
 import android.content.Context
 import android.content.Intent
-import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.Handler
 import android.os.IBinder
@@ -16,11 +15,8 @@ import com.example.schedualapp.Controller.MainActivity
 import android.app.*
 import android.graphics.Color
 import android.os.Build
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.core.content.getSystemService
-import androidx.core.os.postDelayed
 import com.example.schedualapp.Utility.ACTIVITY_ID
 import com.example.schedualapp.Utility.DataHelper
 
