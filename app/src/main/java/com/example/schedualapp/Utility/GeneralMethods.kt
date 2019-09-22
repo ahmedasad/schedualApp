@@ -13,6 +13,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.startActivity
 import com.example.schedualapp.Adapter.ContactAdapter
 import com.example.schedualapp.Controller.MainActivity
+import com.example.schedualapp.Controller.ShowDataFromNotification
 import com.example.schedualapp.Model.Contact
 import com.example.schedualapp.Model.StatusDetails
 import com.example.schedualapp.R
@@ -20,11 +21,9 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import java.io.IOException
 
-class GeneralMethods (val context: Context){
-
+class GeneralMethods(val context: Context, val contRes: ContentResolver) {
 
     val db = DataHelper(context)
-
     fun getItem(id: Int): StatusDetails {
         val item = db.allActivityList[0]
         val listactivity = db.allActivityList
@@ -37,25 +36,21 @@ class GeneralMethods (val context: Context){
         return item
     }
 
-    fun btnCloseClick(item:StatusDetails) {
-
-        val builder = AlertDialog.Builder(context)
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.deletion_confirmation,null)
-        builder.setView(dialogView)
-        builder.setPositiveButton("Yes", ({ _, _ ->
-            db.deleteActivity(item)
-            val intent = Intent(context,MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(context,intent,null)
-        }))
-            .setNegativeButton("No", ({ _, _ ->
-                false
-            }))
-
-
-            .show()
-
-    }
+//    fun btnCloseClick(item: StatusDetails) {
+//
+//        val builder = AlertDialog.Builder(context)
+//        val dialogView = LayoutInflater.from(context).inflate(R.layout.deletion_confirmation, null)
+//        builder.setView(dialogView)
+//        builder.setPositiveButton("ok", ({ _, _ ->
+//            true
+//        }))
+//            .setNegativeButton("Delete", ({ _, _ ->
+//                db.deleteActivity(item)
+//            }))
+//
+//            .show()
+//
+//    }
 
     fun requestLocationPermission(context: Activity) {
         ActivityCompat.requestPermissions(context, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 1)
@@ -63,6 +58,10 @@ class GeneralMethods (val context: Context){
 
     fun requestContactPermission(context: Activity) {
         ActivityCompat.requestPermissions(context, arrayOf(android.Manifest.permission.READ_CONTACTS), 1)
+    }
+
+    fun requestPhoneCallPermission(context: Activity) {
+        ActivityCompat.requestPermissions(context, arrayOf(android.Manifest.permission.CALL_PHONE), 1)
     }
 
     fun getLocationName(lon: Double, lat: Double): String {
@@ -79,7 +78,7 @@ class GeneralMethods (val context: Context){
         return ""
     }
 
-    fun loadContacts(contentResolver:ContentResolver):java.lang.StringBuilder {
+    fun loadContacts(contentResolver: ContentResolver): java.lang.StringBuilder {
         val strBuilder = StringBuilder()
         val contResolver = contentResolver
         val cursor = contResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
@@ -103,7 +102,6 @@ class GeneralMethods (val context: Context){
                             .append("\n\n")
 
 
-
                     }
                     cursor2.close()
                 }
@@ -115,18 +113,22 @@ class GeneralMethods (val context: Context){
         return strBuilder
     }
 
-    fun filter(text:String,adapter: GroupAdapter<ViewHolder>,contentResolver: ContentResolver){
+    fun saveContact():List<String>{
+        return loadContacts(contRes).split("\n\n")
+    }
 
+    fun filter(text: String, adapter: GroupAdapter<ViewHolder>,contact:List<String>) {
         adapter.clear()
-        val contactName = loadContacts(contentResolver).split("\n\n")
-        for(item in contactName){
-            if (item.toLowerCase().contains(text.toLowerCase())){
+        for (item in contact) {
+            if (item.toLowerCase().contains(text.toLowerCase())) {
                 val contactInfo = item.split(" ")
 //                return contactInfo[0]+" "+contactInfo[1]
-                adapter.add(ContactAdapter(Contact(contactInfo[0],contactInfo[1])))
+                adapter.add(ContactAdapter(Contact(contactInfo[0], contactInfo[1])))
                 adapter.notifyDataSetChanged()
             }
         }
+
+
 //        return "Contact not found!"
     }
 

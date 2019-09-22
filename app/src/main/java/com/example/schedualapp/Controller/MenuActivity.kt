@@ -45,7 +45,7 @@ class MenuActivity : AppCompatActivity() {
     fun funOnClick(item: String) {
         val intent = Intent(this, CreateItemActivity::class.java)
         intent.putExtra(SCHEDULE_NAME, item)
-        finish()
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
     }
 

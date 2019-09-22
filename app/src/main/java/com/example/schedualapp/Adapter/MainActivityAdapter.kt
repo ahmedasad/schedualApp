@@ -4,12 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.widget.*
+import androidx.recyclerview.widget.RecyclerView
+import com.example.schedualapp.Controller.MainActivity
 import com.example.schedualapp.Utility.DataHelper
 import com.example.schedualapp.R
 import com.example.schedualapp.Model.StatusDetails
 import com.example.schedualapp.Utility.GeneralMethods
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
+import java.lang.Exception
 
 class MainActivityAdapter(val context: Context, val status: StatusDetails) : Item<ViewHolder>() {
 
@@ -48,14 +51,11 @@ class MainActivityAdapter(val context: Context, val status: StatusDetails) : Ite
         }
 
 
-        delBtn.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(p0: View?) {
+        delBtn.setOnClickListener {
+            DataHelper(context).deleteActivity(status)
+            notifyChanged()
 
-                GeneralMethods(context).btnCloseClick(status)
-
-            }
-
-        })
+        }
 
         viewHolder.itemView.setOnLongClickListener {
             Toast.makeText(context, "Long Clicked from main", Toast.LENGTH_LONG).show()
@@ -79,4 +79,8 @@ class MainActivityAdapter(val context: Context, val status: StatusDetails) : Ite
     }
 
 
+
+
 }
+
+

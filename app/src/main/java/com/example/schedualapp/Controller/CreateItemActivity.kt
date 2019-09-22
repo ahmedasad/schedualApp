@@ -21,6 +21,7 @@ import com.example.schedualapp.R
 import com.example.schedualapp.Utility.AppData
 import com.example.schedualapp.Utility.GeneralMethods
 import com.example.schedualapp.Utility.SCHEDULE_NAME
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.OnItemClickListener
@@ -38,8 +39,9 @@ class CreateItemActivity : AppCompatActivity() {
     lateinit var db: DataHelper
     lateinit var preference: AppData
     var count: Int = 0
-    lateinit var contacts:StringBuilder
-    val adapter =GroupAdapter<ViewHolder>()
+    lateinit var contacts: StringBuilder
+    val adapter = GroupAdapter<ViewHolder>()
+    lateinit var client: FusedLocationProviderClient
     override fun onCreate(savedInstanceState: Bundle?) {
         val context = this
         super.onCreate(savedInstanceState)
@@ -53,17 +55,22 @@ class CreateItemActivity : AppCompatActivity() {
 
         preSetDateAndTime(scheduleName)
 
-        adapter.setOnItemClickListener{ item, view ->
+        adapter.setOnItemClickListener { item, view ->
             val Item = item as ContactAdapter
             val cont = Item.contact
-            findViewById<EditText>(R.id.txtToCall).setText(cont?.name+" "+ cont?.num)
+            findViewById<EditText>(R.id.txtToCall).setText(cont?.name + " " + cont?.num)
             recView.visibility = View.GONE
         }
-        if(scheduleName=="call") {
+
+        checkForPermissions()
+        if (scheduleName == "call") {
+
+            val contact:List<String> = GeneralMethods(this,contentResolver).loadContacts(contentResolver).split("\n\n")
+
             txtToCall.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
                     if (p0!!.length > 0) {
-                        GeneralMethods(context).filter(p0.toString(), adapter, contentResolver)
+                        GeneralMethods(context,contentResolver).filter(p0.toString(), adapter,contact)
 
 //                    txtToCall.text = contact
                     } else {
@@ -84,23 +91,46 @@ class CreateItemActivity : AppCompatActivity() {
         }
     }
 
-    fun fillView(scheduleName:String){
-    when (scheduleName) {
-        "travel" -> setContentView(R.layout.shedule_travel)
-        "meeting" -> setContentView(R.layout.shedule_meeting)
-        "call" -> {
-            setContentView(R.layout.shedule_call)
+    fun fillView(scheduleName: String) {
+        when (scheduleName) {
+            "travel" -> setContentView(R.layout.shedule_travel)
+            "meeting" -> setContentView(R.layout.shedule_meeting)
+            "call" -> {
+                setContentView(R.layout.shedule_call)
 
-            recView.adapter = adapter
-            recView.layoutManager = LinearLayoutManager(this)
+                recView.adapter = adapter
+                recView.layoutManager = LinearLayoutManager(this)
+            }
+            "task" -> setContentView(R.layout.shedule_task)
+            "dinner" -> setContentView(R.layout.shedule_dinner)
+            "extra" -> setContentView(R.layout.shedule_extra)
         }
-        "task" -> setContentView(R.layout.shedule_task)
-        "dinner" -> setContentView(R.layout.shedule_dinner)
-        "extra" -> setContentView(R.layout.shedule_extra)
     }
-}
 
+    private fun checkForPermissions(){
+        client = LocationServices.getFusedLocationProviderClient(this)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Toast.makeText(this, "Need to grant permission!", Toast.LENGTH_LONG).show()
+            GeneralMethods(this,contentResolver).requestLocationPermission(this)
 
+            return
+        }
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.CALL_PHONE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Toast.makeText(this, "Need to grant permission!", Toast.LENGTH_LONG).show()
+            GeneralMethods(this,contentResolver).requestContactPermission(this)
+
+            return
+        }
+
+    }
 
     fun btnCloseClicked(view: View) {
         val intent = Intent(this, MainActivity::class.java)
@@ -116,7 +146,7 @@ class CreateItemActivity : AppCompatActivity() {
         val time = findViewById<TextView>(R.id.txtTimeSetTravel).text.toString()
         val date = findViewById<TextView>(R.id.txtDateSetTravel).text.toString()
 
-        getLocationAndSaveFirstCategoryData(time, date, from, to,extraNote)
+        getLocationAndSaveFirstCategoryData(time, date, from, to, extraNote)
     }
 
     fun btnMeetingSaveClicked(view: View) {
@@ -139,7 +169,7 @@ class CreateItemActivity : AppCompatActivity() {
         val work = findViewById<TextView>(R.id.txtWorkTask).text.toString()
         val time = findViewById<TextView>(R.id.txtTimeSetTask).text.toString()
         val date = findViewById<TextView>(R.id.txtDateSetTask).text.toString()
-        getLocationAndSaveSecondCategoryData(time, date,work)
+        getLocationAndSaveSecondCategoryData(time, date, work)
     }
 
     fun btnDinnerSaveClicked(view: View) {
@@ -157,19 +187,17 @@ class CreateItemActivity : AppCompatActivity() {
         getLocationAndSaveSecondCategoryData(time, date, work)
     }
 
-    fun getLocationAndSaveFirstCategoryData(time: String,date: String,from: String,to: String,extraNote: String) {
+    fun getLocationAndSaveFirstCategoryData(time: String, date: String, from: String, to: String, extraNote: String) {
         count++
         preference.setCount(count)
 
 
-        val client = LocationServices.getFusedLocationProviderClient(this)
         if (ActivityCompat.checkSelfPermission(
                 this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            Toast.makeText(this, "Need to grant permission!", Toast.LENGTH_LONG).show()
-            GeneralMethods(this).requestLocationPermission(this)
+            checkForPermissions()
 
             return
         }
@@ -178,11 +206,11 @@ class CreateItemActivity : AppCompatActivity() {
         println("client___ $client")
         client.lastLocation.addOnSuccessListener { p0 ->
             if (p0 != null) {
-                val location = GeneralMethods(this).getLocationName(p0.longitude, p0.latitude)
+                val location = GeneralMethods(this,contentResolver).getLocationName(p0.longitude, p0.latitude)
                 val statusDetail = StatusDetails(count, scheduleName, date, time, from, to, extraNote, location)
                 db.addActivity(statusDetail)
                 val intent = Intent(this, MainActivity::class.java)
-                finish()
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
             } else {
                 println("location___" + p0.toString())
@@ -199,26 +227,25 @@ class CreateItemActivity : AppCompatActivity() {
         count++
         preference.setCount(count)
 
-        val client = LocationServices.getFusedLocationProviderClient(this)
+
         if (ActivityCompat.checkSelfPermission(
                 this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
-        )   {
-                Toast.makeText(this, "Need to grant permission!", Toast.LENGTH_LONG).show()
-            GeneralMethods(this).requestLocationPermission(this)
+        ) {
+            checkForPermissions()
 
             return
-            }
+        }
 
-            println("client___ $client")
+        println("client___ $client")
         client.lastLocation.addOnSuccessListener { p0 ->
             if (p0 != null) {
-                val location = GeneralMethods(this).getLocationName(p0.longitude, p0.latitude)
+                val location = GeneralMethods(this,contentResolver).getLocationName(p0.longitude, p0.latitude)
                 val statusDetail = StatusDetails(count, scheduleName, date, time, work, location)
                 db.addActivity(statusDetail)
                 val intent = Intent(this, MainActivity::class.java)
-                finish()
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
             } else {
                 println("location___" + p0.toString())
@@ -229,30 +256,29 @@ class CreateItemActivity : AppCompatActivity() {
 
     }
 
-    fun getLocationAndSaveThirdCategoryData(time: String,date: String,with: String,place: String) {
+    fun getLocationAndSaveThirdCategoryData(time: String, date: String, with: String, place: String) {
 
         count++
         preference.setCount(count)
 
 
-        val client = LocationServices.getFusedLocationProviderClient(this)
+
         if (ActivityCompat.checkSelfPermission(
                 this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
-        )   {
-                Toast.makeText(this, "Need to grant permission!", Toast.LENGTH_LONG).show()
-                GeneralMethods(this).requestLocationPermission(this)
-                return
-            }
+        ) {
+           checkForPermissions()
+            return
+        }
 
         client.lastLocation.addOnSuccessListener { p0 ->
             if (p0 != null) {
-                val location = GeneralMethods(this).getLocationName(p0.longitude, p0.latitude)
-                val statusDetail = StatusDetails(count, scheduleName, date, time, with, place, location,"","")
+                val location = GeneralMethods(this,contentResolver).getLocationName(p0.longitude, p0.latitude)
+                val statusDetail = StatusDetails(count, scheduleName, date, time, with, place, location, "", "")
                 db.addActivity(statusDetail)
                 val intent = Intent(this, MainActivity::class.java)
-                finish()
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
             } else {
                 println("location___" + p0.toString())
@@ -270,24 +296,27 @@ class CreateItemActivity : AppCompatActivity() {
 
         val cont = contact.split(" ")
 
-        val client = LocationServices.getFusedLocationProviderClient(this)
         if (ActivityCompat.checkSelfPermission(
                 this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.CALL_PHONE
             ) != PackageManager.PERMISSION_GRANTED
-        )   {
-            Toast.makeText(this, "Need to grant permission!", Toast.LENGTH_LONG).show()
-            GeneralMethods(this).requestLocationPermission(this)
+
+        ) {
+           checkForPermissions()
             return
         }
 
         client.lastLocation.addOnSuccessListener { p0 ->
             if (p0 != null) {
-                val location = GeneralMethods(this).getLocationName(p0.longitude, p0.latitude)
-                val statusDetail = StatusDetails(count, scheduleName, date, time, cont[0], location,cont[1])
+                val location = GeneralMethods(this,contentResolver).getLocationName(p0.longitude, p0.latitude)
+                val statusDetail = StatusDetails(count, scheduleName, date, time, cont[0], location, cont[1])
                 db.addActivity(statusDetail)
                 val intent = Intent(this, MainActivity::class.java)
-                finish()
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
             } else {
             }
@@ -387,7 +416,8 @@ class CreateItemActivity : AppCompatActivity() {
                 region = "AM"
             }
             time = String.format("%01d:%02d %s", h, m, region)
-            if(h>12 && region == "PM")time = String.format("%01d:%02d %s", h-12, m, region)
+            if (h > 12 && region == "PM") time = String.format("%01d:%02d %s", h-12, m, region)
+//            if(h<12 && region == "AM") time = String.format("%01d:%02d %s", h+12, m, region)
 
             val format: String? = scheduleName
             when (format) {
@@ -415,8 +445,6 @@ class CreateItemActivity : AppCompatActivity() {
         }, currentHour, currentMinute, false)
         timePick.show()
     }
-
-
 
 
 }

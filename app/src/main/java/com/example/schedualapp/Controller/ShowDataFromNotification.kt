@@ -1,6 +1,5 @@
 package com.example.schedualapp.Controller
 
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -15,8 +14,7 @@ import com.example.schedualapp.Model.StatusDetails
 import com.example.schedualapp.R
 import com.example.schedualapp.Utility.ACTIVITY_ID
 import com.example.schedualapp.Utility.GeneralMethods
-import java.security.Permission
-import java.util.jar.Manifest
+
 
 class ShowDataFromNotification : AppCompatActivity() {
 
@@ -26,10 +24,10 @@ val REQUEST_CALL = 1
         super.onCreate(savedInstanceState)
         val data = intent.getStringExtra(ACTIVITY_ID)
         val id = data.toInt()
-        item = GeneralMethods(this).getItem(id)
+        item = GeneralMethods(this,contentResolver).getItem(id)
         fillView()
 
-
+    setTitle("")
     }
 
 
@@ -93,18 +91,19 @@ val REQUEST_CALL = 1
             item.title.substring(0, 1).toUpperCase() + item.title.substring(1)
         findViewById<TextView>(R.id.txtDetailMeetingDinnerNotification).text =
             "You scheduled your ${item.title.substring(0, 1) + item.title.substring(1)}"
-        findViewById<TextView>(R.id.txtWithMeetingDinnerNotification).text ="with ${item.with.substring(0, 1) + item.with.substring(1)}"
-            findViewById<TextView>(R.id.txtPlaceMeetingDinnerNotification).text ="${item.place.substring(0, 1) + item.place.substring(1)}"
+        findViewById<TextView>(R.id.txtWithMeetingDinnerNotification).text ="with ${item.with.substring(0, 1).toUpperCase() + item.with.substring(1)}"
+            findViewById<TextView>(R.id.txtPlaceMeetingDinnerNotification).text ="${item.place.substring(0, 1).toUpperCase() + item.place.substring(1)}"
         findViewById<TextView>(R.id.txtTimeAndDateMeetingDinnerNotification).text = "${item.date} at ${item.time}"
     }
 
 
     fun btnCloseClicked(view: View) {
-        GeneralMethods(this).btnCloseClick(item)
+        finish()
     }
 
     fun btnCallClicked(view:View){
         makePhoneCall()
+        finish()
     }
 
     private fun makePhoneCall(){

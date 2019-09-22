@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.widget.Toast
 import com.example.schedualapp.Model.StatusDetails
+import java.lang.Exception
 
 class DataHelper(context: Context) : SQLiteOpenHelper(context,
     DATABASE_NAME, null,
@@ -54,25 +55,29 @@ class DataHelper(context: Context) : SQLiteOpenHelper(context,
             val db = this.writableDatabase
             val cursor = db.rawQuery(selectQuery, null)
 
-            if (cursor.moveToFirst()) {
+            try{
+                if (cursor.moveToFirst()) {
 
-                do {
-                    val activity = StatusDetails()
-                    activity.id = cursor.getInt(cursor.getColumnIndex(COL_ID))
-                    activity.title = cursor.getString(cursor.getColumnIndex(COL_TITLE))
-                    activity.date = cursor.getString(cursor.getColumnIndex(COL_DATE))
-                    activity.time = cursor.getString(cursor.getColumnIndex(COL_TIME))
-                    activity.from = cursor.getString(cursor.getColumnIndex(COL_FROM))
-                    activity.to = cursor.getString(cursor.getColumnIndex(COL_TO))
-                    activity.with = cursor.getString(cursor.getColumnIndex(COL_WITH))
-                    activity.place = cursor.getString(cursor.getColumnIndex(COL_PLACE))
-                    activity.extraNote = cursor.getString(cursor.getColumnIndex(COL_EXTRANOTE))
-                    activity.location = cursor.getString(cursor.getColumnIndex(COL_LOCATION))
-                    activity.contNum = cursor.getString(cursor.getColumnIndex(COL_CONT_NUM))
+                    do {
+                        val activity = StatusDetails()
+                        activity.id = cursor.getInt(cursor.getColumnIndex(COL_ID))
+                        activity.title = cursor.getString(cursor.getColumnIndex(COL_TITLE))
+                        activity.date = cursor.getString(cursor.getColumnIndex(COL_DATE))
+                        activity.time = cursor.getString(cursor.getColumnIndex(COL_TIME))
+                        activity.from = cursor.getString(cursor.getColumnIndex(COL_FROM))
+                        activity.to = cursor.getString(cursor.getColumnIndex(COL_TO))
+                        activity.with = cursor.getString(cursor.getColumnIndex(COL_WITH))
+                        activity.place = cursor.getString(cursor.getColumnIndex(COL_PLACE))
+                        activity.extraNote = cursor.getString(cursor.getColumnIndex(COL_EXTRANOTE))
+                        activity.location = cursor.getString(cursor.getColumnIndex(COL_LOCATION))
+                        activity.contNum = cursor.getString(cursor.getColumnIndex(COL_CONT_NUM))
 
-                    listActivity.add(activity)
-                } while (cursor.moveToNext())
+                        listActivity.add(activity)
+                    } while (cursor.moveToNext())
+                }
             }
+            catch (e:Exception){}
+
             db.close()
             return listActivity
         }
